@@ -2,53 +2,61 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main, master]
-  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build-apk:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '20'
           cache: 'npm'
 
-      - name: Setup Java JDK
+      - name: Clean and Install Dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install --legacy-peer-deps
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      - name: Verify Binaries
+        run: |
+          echo "Checking for Next.js and Capacitor..."
+          npx next -v
+          npx cap -v
+
+      - name: Set up Java JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: 'platforms;android-36 build-tools;36.0.0'
+          sdk-version: '34'
+          build-tools: '34.0.0'
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: Build Web Project
+        run: npm run build
 
-      - name: Verify dependencies installed
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Build Android APK
         run: |
-          test -f node_modules/.bin/next || { echo "next binary missing — yarn install --frozen-lockfile
-          test -f node_modules/.bin/cap || { echo "capacitor CLI missing — yarn install --frozen-lockfile
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
-      - name: Build web + sync Capacitor
-        run: npm run build:android
-
-      - name: Assemble debug APK
-        working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
-
-      - name: Upload debug APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: daftar-raz-debug-apk
+          name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 30
