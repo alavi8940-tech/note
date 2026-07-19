@@ -31,12 +31,12 @@ jobs:
           packages: 'platforms;android-36 build-tools;36.0.0'
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps --no-audit --no-fund
+        run: npm cache clean --force && npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Verify dependencies installed
         run: |
-          test -f node_modules/.bin/next || { echo "next binary missing — npm install --legacy-peer-deps --no-audit --no-fund failed"; exit 1; }
-          test -f node_modules/.bin/cap || { echo "capacitor CLI missing — npm install --legacy-peer-deps --no-audit --no-fund failed"; exit 1; }
+          test -f node_modules/.bin/next || { echo "next binary missing — npm cache clean --force && npm install --legacy-peer-deps --no-audit --no-fund failed"; exit 1; }
+          test -f node_modules/.bin/cap || { echo "capacitor CLI missing — npm cache clean --force && npm install --legacy-peer-deps --no-audit --no-fund failed"; exit 1; }
 
       - name: Build web + sync Capacitor
         run: npm run build:android
