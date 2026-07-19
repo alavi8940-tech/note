@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: 22
           cache: 'npm'
 
       - name: Setup Java JDK
@@ -35,8 +35,8 @@ jobs:
 
       - name: Verify dependencies installed
         run: |
-          test -f node_modules/.bin/next || { echo "next binary missing — npm cache clean --force && npm install --legacy-peer-deps --no-audit --no-fund failed"; exit 1; }
-          test -f node_modules/.bin/cap || { echo "capacitor CLI missing — npm cache clean --force && npm install --legacy-peer-deps --no-audit --no-fund failed"; exit 1; }
+          test -f node_modules/.bin/next || { echo "next binary missing — npm cache clean --force && npm install --legacy-peer-deps --no-audit --no-fund
+          test -f node_modules/.bin/cap || { echo "capacitor CLI missing — npm cache clean --force && npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Build web + sync Capacitor
         run: npm run build:android
