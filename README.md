@@ -81,7 +81,7 @@ cd android
 
 ورک‌فلو `.github/workflows/build-apk.yml` در هر push به `main`/`master`، PR و اجرای دستی، APK دیباگ را می‌سازد:
 
-1. Node 20 و JDK 17 (Temurin) را نصب می‌کند.
+1. Node 22 و JDK 17 (Temurin) را نصب می‌کند (`@capacitor/cli` به Node ≥22 نیاز دارد).
 2. Android SDK (platform 36 + build-tools 36) را آماده می‌کند.
 3. `npm ci` و سپس `npm run build:android` (build استاتیک + cap sync).
 4. `./gradlew assembleDebug` در پوشه `android`.
